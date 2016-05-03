@@ -170,9 +170,12 @@ class Router
             $response = \curl_exec($ch);
             
             if (\curl_errno($ch)) {   // should be 0
-            // curl ended with an error
+                // curl ended with an error
+                $error = \curl_error($ch);
+                $errno = \curl_errno($ch);
                 \curl_close($ch);
-                return [[],[],0];
+
+                throw new \Exception($error . " (errno: $errno)");
             }
 
             $code = \curl_getinfo($ch, \CURLINFO_HTTP_CODE);
